@@ -1,6 +1,6 @@
 var mongo = require('mongodb');
 var mongodb = mongo.MongoClient;
-var mongoUrl = 'mongodb://127.0.0.1:27017/MongoDBSignalR';
+var mongoUrl = 'mongodb://127.0.0.1:27017/WhatHappened';
 var jwt = require('jwt-simple');
 var global = require('../constants/constants');
 
