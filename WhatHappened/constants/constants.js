@@ -1,0 +1,8 @@
+const PLEASE_LOGIN = 'Lütfen Giriş Yapın';
+const SOMETHING_WENT_WRONG='Bir Hata Oluştu';
+const TOKEN_REQUIRED = 'Token Gerekli';
+module.exports = {
+    PLEASE_LOGIN: PLEASE_LOGIN,
+    SOMETHING_WENT_WRONG:SOMETHING_WENT_WRONG,
+    TOKEN_REQUIRED:TOKEN_REQUIRED
+};
