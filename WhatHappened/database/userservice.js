@@ -6,8 +6,6 @@ var global = require('../constants/constants');
 
 exports.GetUser = function (res) {
     try {
-
-
         var data = [];
         mongodb.connect(mongoUrl, function (err, db) {
             db.collection('USERS').find().toArray(function (err, cursor) {
@@ -24,21 +22,22 @@ exports.GetUser = function (res) {
     }
 };
 
-exports.SaveUser = function (req, res) {
+exports.RegisterUser = function (req, res) {
+    var body = req.body;
+    var password = jwt.encode(req.body.PASSWORD, 'shh', 'HS256');
 
     try {
-        
         mongodb.connect(mongoUrl, function (err, db) {
             db.collection('USERS', function (err, col) {
                 col.save({
-                    USERNAME: req.body.USERNAME,
-                    PASSWORD: req.body.PASSWORD,
-                    ADDRESS: req.body.ADDRESS
+                    USERNAME: body.USERNAME,
+                    PASSWORD: password,
+                    ADDRESS: body.ADDRESS
                 }, function () {
                 });
-                SaveToken(req, res);
             });
             db.close();
+            res.send(global.REGISTER_SUCCES, 200);
         });
     }
     catch (err) {
@@ -46,14 +45,33 @@ exports.SaveUser = function (req, res) {
     }
 
 }
+exports.Login = function (req, res, next) {
 
+    var body = req.body;
+    //var decode = jwt.decode(body.PASSWORD,'shh');
+    try {
+        mongodb.connect(mongoUrl, function (err, db) {
+            db.collection('USERS').findOne({
+                "USERNAME": body.USERNAME,
+                "PASSWORD": body.PASSWORD
+            }, function (err, doc) {
+
+                if (doc != undefined || doc != null) {
+                    SaveToken(req, res);
+                }
+                else {
+                    res.end(global.PLEASE_LOGIN, 401);
+                }
+            });
+        });
+    } catch (err) {
+        res.end(global.SOMETHING_WENT_WRONG,500);
+    }
+}
 function SaveToken(req, res) {
     try {
-
-
         var token = new Date().getTime();
         token = jwt.encode({"token": token.toString()}, 'shh', 'HS256');
-
         mongodb.connect(mongoUrl, function (err, db) {
             db.collection('AUTH', function (err, col) {
                 var date = new Date(Date.now()).addDays(1);
@@ -65,7 +83,7 @@ function SaveToken(req, res) {
         });
     }
     catch (err) {
-        res.send(global.SOMETHING_WENT_WRONG, 500);
+        res.end(global.SOMETHING_WENT_WRONG, 500);
     }
 }
 
@@ -86,7 +104,6 @@ exports.CheckToken = function (res, next, token) {
                 });
                 db.close()
             });
-
         }
         else {
             res.end(global.TOKEN_REQUIRED, 400)

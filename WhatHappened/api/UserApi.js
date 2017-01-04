@@ -9,7 +9,11 @@ router.get('/user', [auth.AuthCheck], function (req, res) {
 });
 
 router.post('/user', function (req, res) {
-    userService.SaveUser(req,res);
+    userService.RegisterUser(req,res);
+});
+
+router.post('/login',function (req,res,next) {
+   userService.Login(req,res,next)
 });
 
 
