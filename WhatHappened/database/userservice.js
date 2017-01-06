@@ -48,12 +48,12 @@ exports.RegisterUser = function (req, res) {
 exports.Login = function (req, res, next) {
 
     var body = req.body;
-    //var decode = jwt.decode(body.PASSWORD,'shh');
+    var password = jwt.encode(req.body.PASSWORD, 'shh', 'HS256');
     try {
         mongodb.connect(mongoUrl, function (err, db) {
             db.collection('USERS').findOne({
                 "USERNAME": body.USERNAME,
-                "PASSWORD": body.PASSWORD
+                "PASSWORD": password
             }, function (err, doc) {
 
                 if (doc != undefined || doc != null) {
