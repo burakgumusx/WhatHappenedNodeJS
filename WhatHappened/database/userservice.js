@@ -12,13 +12,13 @@ exports.GetUser = function (res) {
                 cursor.forEach(function (row) {
                     data.push(row);
                 });
-                res.send(data, 200);
+                res.json(data, 200);
             });
             db.close();
         });
     }
     catch (err) {
-        res.send(global.SOMETHING_WENT_WRONG, 500)
+        res.json(global.SOMETHING_WENT_WRONG, 500)
     }
 };
 
@@ -37,11 +37,11 @@ exports.RegisterUser = function (req, res) {
                 });
             });
             db.close();
-            res.send(global.REGISTER_SUCCES, 200);
+            res.json(global.REGISTER_SUCCES, 200);
         });
     }
     catch (err) {
-        res.send(global.SOMETHING_WENT_WRONG, 500);
+        res.json(global.SOMETHING_WENT_WRONG, 500);
     }
 
 }
@@ -60,12 +60,12 @@ exports.Login = function (req, res, next) {
                     SaveToken(req, res);
                 }
                 else {
-                    res.end(global.PLEASE_LOGIN, 401);
+                    res.json(global.PLEASE_LOGIN, 401);
                 }
             });
         });
     } catch (err) {
-        res.end(global.SOMETHING_WENT_WRONG,500);
+        res.json(global.SOMETHING_WENT_WRONG,500);
     }
 }
 function SaveToken(req, res) {
@@ -79,11 +79,11 @@ function SaveToken(req, res) {
                 });
             });
             db.close();
-            res.send(token, 200);
+            res.json(token, 200);
         });
     }
     catch (err) {
-        res.end(global.SOMETHING_WENT_WRONG, 500);
+        res.json(global.SOMETHING_WENT_WRONG, 500);
     }
 }
 
@@ -96,7 +96,7 @@ exports.CheckToken = function (res, next, token) {
                     TOKEN: token
                 }, function (err, doc) {
                     if (doc == undefined || doc == null) {
-                        res.end(global.PLEASE_LOGIN, 401);
+                        res.json(global.PLEASE_LOGIN, 401);
                     }
                     else {
                         next();
@@ -106,11 +106,11 @@ exports.CheckToken = function (res, next, token) {
             });
         }
         else {
-            res.end(global.TOKEN_REQUIRED, 400)
+            res.json(global.TOKEN_REQUIRED, 400)
         }
     }
     catch (err) {
-        res.end(global.SOMETHING_WENT_WRONG, 500);
+        res.json(global.SOMETHING_WENT_WRONG, 500);
     }
 }
 
