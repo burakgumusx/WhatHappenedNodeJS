@@ -13,8 +13,6 @@ app.use(bodyParser.json());
 app.use('/views',express.static(__dirname+'/views'));
 app.use('/',userApi);
 app.use('/',index);
-
-
 io.on('connection', function(socket){
     console.log('a user connected '+socket.id);
     socket.on('chat message', function(msg){
